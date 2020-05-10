@@ -19,7 +19,7 @@ export const DeviceDetectionConfigService = new InjectionToken<IConfig>(
 })
 export class DeviceDetectionService implements OnDestroy {
   public layoutSize$ = new BehaviorSubject<SupportedDeviceTypes>(
-    this.getLayoutTypeByWindowWidth(this.window.innerWidth)
+    this._getLayoutTypeByWindowWidth(this.window.innerWidth)
   );
 
   private _windowResizeSubscription: Subscription;
@@ -28,11 +28,11 @@ export class DeviceDetectionService implements OnDestroy {
     @Inject(DeviceDetectionConfigService) private config: IConfig,
     @Inject(Window) private window: Window
   ) {
-    this.observeResize();
+    this._observeResize();
   }
 
-  private observeResize(): void {
-    let previousLayoutSize = this.getLayoutTypeByWindowWidth(
+  private _observeResize(): void {
+    let previousLayoutSize = this._getLayoutTypeByWindowWidth(
       this.window.innerWidth
     );
 
@@ -43,7 +43,7 @@ export class DeviceDetectionService implements OnDestroy {
         map((event: Event) => (event.target as Window).innerWidth)
       )
       .subscribe(width => {
-        const nextLayourSize = this.getLayoutTypeByWindowWidth(width);
+        const nextLayourSize = this._getLayoutTypeByWindowWidth(width);
         if (nextLayourSize === previousLayoutSize) {
           return;
         }
@@ -54,7 +54,7 @@ export class DeviceDetectionService implements OnDestroy {
       });
   }
 
-  private getLayoutTypeByWindowWidth(width: number) {
+  private _getLayoutTypeByWindowWidth(width: number) {
     if (width >= this.config.large) {
       return SupportedDeviceTypes.Large;
     }
